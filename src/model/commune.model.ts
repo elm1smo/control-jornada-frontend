@@ -1,21 +1,16 @@
+import { CityModel } from "./city.model"
+import { CountryModel } from "./country.model"
+import { RegionModel } from "./region.model"
+
 export interface CommuneModel {
   id: number
   cityId: number
   name: string
   siiCode?: string
   tgrCode?: string
-  city: {
-    id: number
-    name: string
-  }
-  region: {
-    id: number
-    name: string
-  }
-  country: {
-    id: number
-    name: string
-  }
+  city: Omit<CityModel, 'regionId'>
+  region: Omit<RegionModel, 'countryId'>
+  country: Omit<CountryModel, 'nationality'>
 }
 
 export type CommuneRequestCreate = Omit<CommuneModel, 'id' | 'city' | 'region' | 'country'>
