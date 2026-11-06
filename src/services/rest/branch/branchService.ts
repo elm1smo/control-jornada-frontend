@@ -1,18 +1,7 @@
 import { JSON_HEADERS, request } from '@/helpers/API'
-import { BranchModel, BranchRequest, CompanyOption, CommuneOption } from '@/model'
+import { BranchModel, BranchRequest } from '@/model'
 
 const apiUrl = `${process.env.BASE_URL_API}/v1/template/branch`
-const companyApiUrl = `${process.env.BASE_URL_API}/v1/template/company`
-const communeApiUrl = `${process.env.BASE_URL_API}/v1/template/commune`
-
-export const allCompanies = async (): Promise<CompanyOption[]> => {
-  return request<CompanyOption[]>(companyApiUrl)
-}
-
-export const allCommunes = async (): Promise<CommuneOption[]> => {
-  return request<CommuneOption[]>(communeApiUrl)
-}
-
 export const allBranches = async (): Promise<BranchModel[]> => {
   return request<BranchModel[]>(apiUrl)
 }

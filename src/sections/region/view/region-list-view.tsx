@@ -22,7 +22,7 @@ import { getErrorMessage } from '@/helpers/API'
 import { RegionModel } from '@/model/region.model'
 import { RouterLink } from '@/routes/components'
 import { useRouter } from '@/routes/hooks'
-import { regionPaths } from '@/routes/regionPaths'
+import { paths } from '@/routes/paths'
 import { allRegions, deleteRegion } from '@/services/rest/indexRegion'
 import { getComparator, includesText, Order } from '@/utils/table-filter'
 
@@ -42,7 +42,7 @@ export default function RegionListView() {
   useEffect(() => {
     const getRegions = async () => {
       try {
-        const response = await allRegions()
+        const response = await allRegions() 
         setRegionList(response)
       } catch (error) {
         enqueueSnackbar(getErrorMessage(error), { variant: 'error' })
@@ -80,7 +80,7 @@ export default function RegionListView() {
         table.onChangePage(null, table.page - 1)
       }
     } catch (error) {
-      enqueueSnackbar(getErrorMessage(error), { variant: 'error' })
+      enqueueSnackbar("Primero elimina todas las ciudades de la región", { variant: 'error' })
     }
   }
 
@@ -88,15 +88,15 @@ export default function RegionListView() {
     <Container maxWidth="xl">
       <CustomBreadcrumbs
         heading="Lista de regiones"
-        links={[{ name: 'Regiones', href: regionPaths.region.root },{ name: 'Lista' }]}
+        links={[{ name: 'Regiones', href: paths.region.root },{ name: 'Lista' }]}
         action={
           <Button
             component={RouterLink}
-            href={regionPaths.region.add}
+            href={paths.region.add}
             variant="contained"
             startIcon={<AddIcon />}
           >
-            Agregar
+            Nueva región
           </Button>
         }
         sx={{ mb: { xs: 3, md: 5 } }}
@@ -106,7 +106,7 @@ export default function RegionListView() {
         <RegionTableToolbar text={searchText} onChangeText={handleSearch} />
 
         <TableContainer>
-          <Table sx={{ minWidth: 720 }}>
+          <Table sx={{ minWidth: 720, tableLayout: 'fixed', '& th': { fontSize: 12, letterSpacing: 0.6, textTransform: 'uppercase' } }}>
             <TableHeadCustom
               headLabel={TABLE_HEAD}
               order={table.order}
@@ -122,13 +122,14 @@ export default function RegionListView() {
                   <RegionTableRow
                     key={row.id}
                     row={row}
-                    onEditRow={() => router.push(regionPaths.region.edit(row.id))}
+                    countryName={row.country.name}
+                    onEditRow={() => router.push(paths.region.edit(row.id))}
                     onDeleteRow={() => handleDeleteRow(row.id)}
                   />
                 ))}
 
               {!loading && !dataFiltered.length && (
-                <TableNoData colSpan={TABLE_HEAD.length} />
+                <TableNoData colSpan={TABLE_HEAD.length} message="Tenemos problemas para mostrar las regiones" />
               )}
             </TableBody>
           </Table>

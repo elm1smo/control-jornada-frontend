@@ -3,7 +3,7 @@
 import Container from '@mui/material/Container'
 
 import CustomBreadcrumbs from '@/components/custom-breadcrumbs'
-import { regionPaths } from '@/routes/regionPaths'
+import { paths } from '@/routes/paths'
 
 import RegionNewEditForm from '../region-new-edit-form'
 
@@ -17,7 +17,7 @@ export default function RegionEditView({ id }: Props) {
       <CustomBreadcrumbs
         heading="Editar región"
         links={[
-          { name: 'Regiones', href: regionPaths.region.root },
+          { name: 'Regiones', href: paths.region.root },
           { name: `Región #${id}` }
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}

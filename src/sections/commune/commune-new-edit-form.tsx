@@ -89,7 +89,7 @@ export default function CommuneNewEditForm({ communeId }: Props) {
     }
 
     getCities()
-  })
+  }, [])
 
   const onSubmit = handleSubmit(async (data) => {
     try {

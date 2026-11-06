@@ -4,21 +4,17 @@ import { TableHeadItem } from '@/components/table'
 
 export const TABLE_HEAD: TableHeadItem[] = [
   { id: 'id', label: '#', width: 80 },
-  { id: 'countryId', label: 'ID_Pais', width: 80 },
-  { id: 'name', label: 'Nombre' },
-  { id: '', width: 110, align: 'right' }
+  { id: 'country', label: 'País', sortable: false },
+  { id: 'name', label: 'Región' },
+  { id: '', width: 240, align: 'right' }
 ]
 
 export const RegionSchema = Yup.object({
-  id: Yup.number()
-    .typeError('El ID debe ser un número')
-    .integer('El ID debe ser un número entero')
-    .positive('El ID debe ser mayor que cero')
-    .required('El ID es obligatorio'),
-  countryId: Yup.number()
-    .typeError('El id del país debe ser un número')
-    .integer('El país debe ser un número entero')
-    .required('El país es obligatorio'),
+  country: Yup.object({
+    id: Yup.number()
+      .notOneOf([0], 'Debes seleccionar un país')
+      .required('Debes seleccionar un país')
+  }).required(),
   name: Yup.string()
     .trim()
     .required('El nombre es obligatorio')
@@ -28,7 +24,6 @@ export const RegionSchema = Yup.object({
 export type RegionFormValues = Yup.InferType<typeof RegionSchema>
 
 export const REGION_DEFAULT_VALUES: RegionFormValues = {
-  id: 0,
-  countryId: 0,
+  country: { id: 0 },
   name: ''
 }

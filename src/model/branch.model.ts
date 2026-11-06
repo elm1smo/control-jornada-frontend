@@ -1,7 +1,10 @@
+import { CommuneModel } from './commune.model'
+import { CompanyModel } from './company.model'
+
 export interface BranchModel {
   id: number
-  company: CompanyOption
-  commune: CommuneOption
+  company: Pick<CompanyModel, 'id' | 'name'>
+  commune: Pick<CommuneModel, 'id' | 'name'>
   name: string
   address: string
   phone?: string | null
@@ -9,19 +12,9 @@ export interface BranchModel {
   active?: boolean | null
 }
 
-export interface CompanyOption {
-  id: number
-  name: string
-}
-
-export interface CommuneOption {
-  id: number
-  name: string
-}
-
 export interface BranchRequest {
-  company: Pick<CompanyOption, 'id'>
-  commune: Pick<CommuneOption, 'id'>
+  company: Pick<CompanyModel, 'id'>
+  commune: Pick<CommuneModel, 'id'>
   name: string
   address: string
   phone?: string

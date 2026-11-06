@@ -18,7 +18,7 @@ export default function RegisterTableToolbar({
         fullWidth
         value={text}
         onChange={(event) => onChangeText(event.target.value)}
-        placeholder="Buscar por empleado o fecha..."
+        placeholder="Buscar fecha..."
         slotProps={{
           input: {
             startAdornment: (

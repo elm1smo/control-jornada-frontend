@@ -13,9 +13,10 @@ import { Controller, useForm } from 'react-hook-form'
 import FormProvider, { RHFSwitch, RHFTextField } from '@/components/hook-form'
 import { useSnackbar } from '@/components/snackbar'
 import { getErrorMessage } from '@/helpers/API'
-  import { allCompanies, allCommunes, branchById, createBranch, updateBranch } from '@/services/rest'
-import { CompanyOption, CommuneOption } from '@/model'
-import { BranchRequest } from '@/model'
+import { branchById, createBranch, updateBranch } from '@/services/rest'
+import { BranchRequest, CompanyModel, CommuneModel } from '@/model'
+import { allCommunes } from '@/services/rest/commune/commune-service'
+import { allCompanies } from '@/services/rest/company/companyService'
 import { RouterLink } from '@/routes/components'
 import { useRouter } from '@/routes/hooks'
 import { paths } from '@/routes/paths'
@@ -29,8 +30,8 @@ export default function BranchNewEditForm({ branchId, onSuccess, onCancel }: Pro
   const { enqueueSnackbar } = useSnackbar()
   const [loading, setLoading] = useState(Boolean(branchId))
   const [optionsLoading, setOptionsLoading] = useState(true)
-  const [companies, setCompanies] = useState<CompanyOption[]>([])
-  const [communes, setCommunes] = useState<CommuneOption[]>([])
+  const [companies, setCompanies] = useState<CompanyModel[]>([])
+  const [communes, setCommunes] = useState<CommuneModel[]>([])
 
   const methods = useForm<BranchFormValues>({
     resolver: yupResolver(BranchSchema),

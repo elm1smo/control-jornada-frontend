@@ -3,16 +3,19 @@ import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
 import CircularProgress from '@mui/material/CircularProgress'
 import Stack from '@mui/material/Stack'
+import MenuItem from '@mui/material/MenuItem'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import FormProvider, { RHFTextField } from '@/components/hook-form'
+import { CountryModel } from '@/model/country.model'
 import { useSnackbar } from '@/components/snackbar'
 import { getErrorMessage } from '@/helpers/API'
 import { RouterLink } from '@/routes/components'
 import { useRouter } from '@/routes/hooks'
-import { regionPaths } from '@/routes/regionPaths'
+import { paths } from '@/routes/paths'
 import { saveRegion, regionById, updateRegion } from '@/services/rest/indexRegion'
+import { allCountries } from '@/services/rest'
 
 import { REGION_DEFAULT_VALUES, RegionFormValues, RegionSchema } from './region'
 
@@ -24,6 +27,8 @@ export default function RegionNewEditForm({ regionId }: Props) {
   const router = useRouter()
   const { enqueueSnackbar } = useSnackbar()
   const [loading, setLoading] = useState(!!regionId)
+  const [countries, setCountries] = useState<CountryModel[]>([])
+  const [loadingCountries, setLoadingCountries] = useState(true)
 
   const methods = useForm<RegionFormValues>({
     resolver: yupResolver(RegionSchema),
@@ -44,13 +49,12 @@ export default function RegionNewEditForm({ regionId }: Props) {
         const region = await regionById(regionId)
 
         reset({
-          id: region.id,
-          countryId: region.countryId,
+          country: { id: region.country.id },
           name: region.name
         })
       } catch (error) {
         enqueueSnackbar(getErrorMessage(error), { variant: 'error' })
-        router.push(regionPaths.region.list)
+        router.push(paths.region.list)
       } finally {
         setLoading(false)
       }
@@ -58,6 +62,14 @@ export default function RegionNewEditForm({ regionId }: Props) {
 
     getRegion()
   }, [regionId, reset, enqueueSnackbar, router])
+  useEffect(() => {
+    allCountries()
+      .then(setCountries)
+      .catch((error) => {
+        enqueueSnackbar(getErrorMessage(error), { variant: 'error' })
+      })
+      .finally(() => setLoadingCountries(false))
+  }, [enqueueSnackbar])
 
   const onSubmit = handleSubmit(async (data) => {
     try {
@@ -69,13 +81,13 @@ export default function RegionNewEditForm({ regionId }: Props) {
         enqueueSnackbar('Región creada')
       }
 
-      router.push(regionPaths.region.list)
+      router.push(paths.region.list)
     } catch (error) {
-      enqueueSnackbar(getErrorMessage(error), { variant: 'error' })
+      enqueueSnackbar("Esta región ya existe", { variant: 'error' })
     }
   })
 
-  if (loading) {
+  if (loading || loadingCountries) {
     return (
       <Stack alignItems="center" sx={{ py: 8 }}>
         <CircularProgress />
@@ -87,25 +99,18 @@ export default function RegionNewEditForm({ regionId }: Props) {
     <FormProvider methods={methods} onSubmit={onSubmit}>
       <Card sx={{ p: 3 }}>
         <Stack spacing={3}>
-          <RHFTextField
-            name="id"
-            label="ID de la región"
-            type="number"
-            required
-            disabled={!!regionId}
-          />
           <RHFTextField name="name" label="Nombre" required />
-          <RHFTextField
-            name="countryId"
-            label="ID del país"
-            type="number"
-            required
-          />
+          <RHFTextField name="country.id" label="País" select required>
+            <MenuItem value={0}>Selecciona un país</MenuItem>
+            {countries.map((country) => (
+              <MenuItem key={country.id} value={country.id}>{country.name}</MenuItem>
+            ))}
+          </RHFTextField>
 
           <Stack direction="row" spacing={2} justifyContent="flex-end">
             <Button
               component={RouterLink}
-              href={regionPaths.region.list}
+              href={paths.region.list}
               variant="outlined"
               color="inherit"
             >

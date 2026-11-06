@@ -113,7 +113,7 @@ export default function RegisterListView() {
         />
 
         <TableContainer>
-          <Table sx={{ minWidth: 900 }}>
+          <Table sx={{ minWidth: 1400 }}>
             <TableHeadCustom
               headLabel={TABLE_HEAD}
               order={table.order}
